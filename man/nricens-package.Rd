@@ -48,7 +48,7 @@ t0 = 2000
 
 ## for standard Kaplan-Meier based NRI estimator
 #nricens(time, event, z.std, z.new, t0, cut=0.05, niter=1000, region.method='diff')
-nricens(time, event, z.std, z.new, t0, cut=0.05, niter=200, region.method='diff')
+nricens(time, event, z.std, z.new, t0, cut=0.05, niter=50, region.method='diff')
 
 ## for modified Kaplan-Meier based NRI estimator
 #nricens(time, event, z.std, z.new, t0, cut=0.05, niter=1000, zcT=z.new, ms.strt=100, region.method='diff')

@@ -1,5 +1,4 @@
 #exportPattern("^[[:alpha:]]+")
 
 
-#export(nricens, nricens.km.main, nricens.ipw.main, nricens.bootstrap, get.risk.cox, get.surv.km, get.surv.wkm, get.uppdwn)
 export(nricens, get.risk.cox, get.surv.km, get.surv.wkm, get.uppdwn, strata.cox.1dim, strata.cox.2dim)

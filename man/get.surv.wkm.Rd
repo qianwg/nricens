@@ -37,7 +37,7 @@ event = as.integer(dat$status == 2)
 N     = nrow(dat)
 zcT   = subset(dat, select=c(age, sex, albumin, bili, protime))
 zcC   = subset(dat, select=c(age, sex, albumin, bili, protime))
-niter = 100
+niter = 50
 alpha = 0.05
 
 strt = strata.cox.2dim(time, event, zcT, zcC, ms.strt = 100, pca2nd = 1)

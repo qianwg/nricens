@@ -1,5 +1,5 @@
-288f5eef0cf9a16bc4ed16b2af4344b1 *DESCRIPTION
-13b713a5172c54c5456b01ef78db9ad9 *NAMESPACE
+6036963d419df11cf35eceb9dae9a725 *DESCRIPTION
+325a8d355c4a4093a499342223815e4f *NAMESPACE
 1d100ddac4bbecf58f3c34698eb92da7 *R/categorize.R
 dacf53843d88e83515b5d43950315296 *R/get.risk.cox.R
 d6944821e77a8a74c39cb10e1a17aed0 *R/get.surv.km.R
@@ -16,9 +16,9 @@ f121ebf09d39fa816efc9fd3b481e7f2 *R/strata.cox.2dim.R
 6ae393f6a0dedf51806a2db6d01ca61f *man-hidden/nricens.km.main.Rd
 565a25de2b2a23fb32ac1a260e59fa0c *man/get.risk.cox.Rd
 311de0baec8d1a0d00530ddc0b58c35b *man/get.surv.km.Rd
-4937c2df315b247dfeb1c24fc09d00ba *man/get.surv.wkm.Rd
+a56c011a36ae77445fa67a9fc6d68491 *man/get.surv.wkm.Rd
 c784b2169face8bf0a4c60038cfcb7f4 *man/get.uppdwn.Rd
-56d1cd5fad43c7e06d98569ee62b1979 *man/nricens-package.Rd
-3d0b97fb022543769990126a7e071ff0 *man/nricens.Rd
+1a375e31f0de860af97ed447005069de *man/nricens-package.Rd
+0116a87940dc31cc19cee26854e1c07d *man/nricens.Rd
 97117b62c5d647c429a0be5c71bb3b4f *man/strata.cox.1dim.Rd
 14c3af3d3939c4b269e309973367e86b *man/strata.cox.2dim.Rd

@@ -85,3 +85,39 @@ point.method = "km",  alpha = 0.05)
     1-alpha confidence interval is calcualted.
 }
 }
+
+\examples{
+library(survival)
+
+dat = na.omit(pbc[1:312,])
+dat$sex = ifelse(dat$sex=='f', 1, 0)
+
+## time to event
+time = dat$time
+
+## event indicator
+event = as.integer(dat$status == 2)
+
+## predictors in the standard model
+z.std = subset(dat, select=c(age, sex, bili, chol))
+
+## predictors in the new model
+z.new = subset(dat, select=c(age, sex, bili, chol, protime))
+
+## time to define 'event' / 'non-event'
+t0 = 2000
+
+## for standard Kaplan-Meier based NRI estimator
+#nricens(time, event, z.std, z.new, t0, cut=0.05, niter=1000, region.method='diff')
+nricens(time, event, z.std, z.new, t0, cut=0.05, niter=50, region.method='diff')
+
+## for modified Kaplan-Meier based NRI estimator
+#nricens(time, event, z.std, z.new, t0, cut=0.05, niter=1000, zcT=z.new, ms.strt=100, region.method='diff')
+
+## for standard IPW based NRI estimator
+#nricens(time, event, z.std, z.new, t0, cut=0.05, niter=1000, region.method='diff', point.method='ipw')
+
+## for modified Kaplan-Meier based NRI estimator
+#nricens(time, event, z.std, z.new, t0, cut=0.05, niter=1000, zcC=z.new, ms.strt=100, region.method='diff', point.method='ipw')
+
+}
