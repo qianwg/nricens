@@ -17,7 +17,7 @@ function (time, event, upp, dwn, t0, strt) {
 
   w.case[!case] = 0
   w.ctrl[!ctrl] = 0
-  
+
   pr.upp.case = sum(w.case * upp) / sum(w.case)
   pr.dwn.case = sum(w.case * dwn) / sum(w.case)
   pr.dwn.ctrl = sum(w.ctrl * dwn) / sum(w.ctrl)

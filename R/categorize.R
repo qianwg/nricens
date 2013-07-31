@@ -1,15 +1,10 @@
 categorize <-
-function(dat, threshold=NULL, nlevel=NULL) {
+function(dat, threshold) {
 
-  if (is.null(threshold))
-    threshold = quantile(dat, seq(0,1,1/nlevel), na.rm=T)[-1]
-  else
-    nlevel = length(threshold)
-
-  threshold[nlevel] = max(dat, na.rm=T) + 1
+  threshold[length(threshold) + 1] = max(dat, na.rm=TRUE) + 1
 
   new = rep(NA, length(dat))
-  for (i in 1:nlevel)
+  for (i in 1:length(threshold))
     new[is.na(new) & dat < threshold[i]] = i
 
   return(new)

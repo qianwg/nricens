@@ -1,29 +1,29 @@
 \name{get.surv.km}
 \alias{get.surv.km}
 \title{
-Calculating the survival probability by the standard Kaplan-Meier
-estimator at the given time.
+  Calculate a survival probability at a given time by the standard
+  Kaplan-Meier estimator.
 }
 \description{
-Calculating the survival probability by the standard Kaplan-Meier
-estimator given the time. \code{survfit} is run internally.
+  This function estimates \eqn{Pr\{T > t_0\}} by the Kaplan-Meier
+  estimator. \eqn{t_0} should be given.
 }
 \usage{
-get.surv.km(time, event, t0, subst = NULL)
+get.surv.km(time, event, t0, subs = NULL)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{time}{
-    Vector of time to event
-}
+    Vector of follow up times.
+  }
   \item{event}{
-    Vector of event indicator, 1 for event of interest, 0 for censoring
-}
+    Vector of event indicators, 1 for event of interest, 0 for censoring.
+  }
   \item{t0}{
-    Time of defining evnet/non-event.
-}
-  \item{subst}{
-    Vector of logical values to define subjects for a calculation.
-    When \code{subst=NULL}, all subjects are used.
-}
+    Scalar value indicating a time to determine evnet/non-event (\eqn{t_0}).
+  }
+  \item{subs}{
+    Vector of logical values to determine which subjects to be used for
+    a calculation. When this option is not specified
+    (\code{subs = NULL}), all subjects are used for a calculation.
+  }
 }

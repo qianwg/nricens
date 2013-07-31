@@ -1,53 +1,59 @@
 \name{get.surv.wkm}
 \alias{get.surv.wkm}
 \title{
-  Calculating the survival probability by the weighted Kaplan-Meier
-  estimator at the given time.
+  Calculate a survival probability at a given time by the weighted
+  Kaplan-Meier estimator.
 }
 \description{
-  Calculating the survival probability by the standard Kaplan-Meier
-  estimator given the time. Subgroup definition should be given for calculation.
+  This function estimates \eqn{Pr\{T > t_0\}} by the weighted
+  Kaplan-Meier estimator.
+  It is required to specify \eqn{t_0} and strata for the calculation.
+  Strata can be obtained by the function of \code{strata.cox.2dim} in
+  this package. See examples below.
 }
 \usage{
 get.surv.wkm(time, event, t0, strt)
 }
 \arguments{
   \item{time}{
-    Vector of time to event
+    Vector of follow up times.
   }
   \item{event}{
-    Vector of event indicator, 1 for event of interest, 0 for censoring
+    Vector of event indicators, 1 for event of interest, 0 for censoring.
   }
   \item{t0}{
-    Time of defining evnet/non-event
+    Scalar value indicating a time to determine evnet/non-event (\eqn{t_0}).
   }
   \item{strt}{
-    Vector values of the subgroup definition for weighted Kaplan-Meier estimator
+    Vector of integer values corresponding to the strata number for each
+    subject.
   }
 }
 \examples{
-##
-## an example to calculate survival probability by the weighted Kaplan-Meier estimator
-
+## here consider pbc dataset in survival package as an example
+## calculate survival probability at several times by the weighted Kaplan-Meier estimator
 library(survival)
-
-dat   = na.omit(pbc[1:312,])
+dat   = pbc[1:312,]
 time  = dat$time
-event = as.integer(dat$status == 2)
+event = ifelse(dat$status==2, 1, 0)
 N     = nrow(dat)
-zcT   = subset(dat, select=c(age, sex, albumin, bili, protime))
-zcC   = subset(dat, select=c(age, sex, albumin, bili, protime))
-niter = 50
+niter = 30
 alpha = 0.05
 
-strt = strata.cox.2dim(time, event, zcT, zcC, ms.strt = 100, pca2nd = 1)
+## covariates for the event and the censoring time models: age, bilirubin, albumin, and protime
+zc = as.matrix(subset(dat, select = c(age, bili, albumin, protime)))
+
+## obtaining strata by the function provided by this package
+strt = strata.cox.2dim(time, event, zc, zc, m = 100, pca2nd = 1)$strt
 
 ## weighted Kaplan-Meier estimation
 results = NULL
-for (t0 in seq(min(time), max(time), by=1000)) {
+ts = seq(min(time), max(time), by=1000)
+for (t0 in ts) {
   sv = get.surv.wkm(time, event, t0, strt)
 
   ## bootstrap
+  ## number of iterations should be increased in practice
   samp = rep(NA, niter)
   for (b in 1:niter) {
     f = as.integer(runif(N, 0, N)) + 1
@@ -58,4 +64,7 @@ for (t0 in seq(min(time), max(time), by=1000)) {
   results = rbind(results, data.frame(t=t0, surv=sv, lower=ci[1], upper=ci[2]))
 }
 results
+
+## comparison with the standard Kaplan-Merier
+summary(survfit(Surv(time, event) ~ 1, dat), t=ts)
 }
