@@ -1,5 +1,5 @@
 nricens.ipw.main <-
-function (time, event, upp, dwn, t0, strt) {
+function (time, event, upp, dwn, t0) {
 
   case = time <= t0 & event == 1
   ctrl = time >  t0
@@ -7,6 +7,7 @@ function (time, event, upp, dwn, t0, strt) {
   w.case = rep(NA, length(time))
   w.ctrl = rep(NA, length(time))
 
+  strt = rep(1, length(time))
   unq = unique(strt)
   for (i in unq) {
     ff = strt == i

@@ -25,13 +25,13 @@
 \tabular{ll}{
 Package: \tab nricens\cr
 Type: \tab Package\cr
-Version: \tab 1.2\cr
-Date: \tab 2013-07-31\cr
+Version: \tab 1.3\cr
+Date: \tab 2016-12-12\cr
 License: \tab GPL-2\cr
 }
 }
 \author{
-Eisuke Inoue <inouee@pharm.kitasato-u.ac.jp>
+Eisuke Inoue <inoue-ei@ncchd.go.jp>
 }
 \references{
 Pencina MJ, D'Agostino RB, Steyerberg EW. Extensions of net

@@ -18,7 +18,6 @@ NRI for time to event models
 nricens(time = NULL, event = NULL, mdl.std = NULL, mdl.new = NULL,
         z.std = NULL, z.new = NULL, p.std = NULL, p.new = NULL, t0 = NULL,
         updown = "category", cut = NULL, point.method = "km",
-        zc.T = NULL, zc.C = NULL, mdl.C = NULL, m = 100, pca2nd = 1,
         niter = 1000, alpha = 0.05, msg = TRUE)
 }
 \arguments{
@@ -70,34 +69,6 @@ nricens(time = NULL, event = NULL, mdl.std = NULL, mdl.new = NULL,
     estimator is used (Pencina et al., 2011). 
     When \code{"ipw"} is specified, the inverse probability weighting
     (IPW) NRI estimator is used (Uno et al., 2012).
-    When \code{"modkm"} is specified, the modified KM based NRI
-    estimator is used.
-    When \code{"modipw"} is specified, the modified IPW NRI estimator is
-    used.
-  }
-  \item{zc.T}{
-    Matrix of covariates for a working Cox model for \eqn{T},
-    which is used to construct strata for the modified KM based NRI
-    estimator.
-  }
-  \item{zc.C}{
-    Matrix of covariates for a working Cox model for \eqn{C},
-    which is used to construct strata for the modified KM and the
-    modified IPW NRI estimators.
-  }
-  \item{mdl.C}{
-    \code{coxph} or \code{survreg} object to construct strata for the
-    modified IPW NRI estimator.
-  }
-  \item{m}{
-    Scalar value to determine the number of minimum samples for each
-    stratum, which is used both in the modified KM and the modified IPW
-    NRI estimators.
-  }
-  \item{pca2nd}{
-    Scalar value to determine the number of strata in the second
-    principal component, which is used in the modified KM based NRI
-    estimator.
   }
   \item{niter}{
     Scalar value to determine the number of bootstratp sampling. When
@@ -159,34 +130,6 @@ nricens(time = NULL, event = NULL, mdl.std = NULL, mdl.new = NULL,
   difference based NRI, can be calculated by specifying both
   \code{updown = "diff"} and \code{cut = 0}.
 
-  When the modified KM based NRI estimator
-  (\code{point.method = "modkm"}) is specified, the weighted KM
-  estimators (Hsu and Taylor, 2010) instead of the standard KM are used
-  for estimating the survival functions in the NRI prospective form
-  (Pencina et al., 2011).
-  Strata are constructed based on a categorization of individual scores
-  from working Cox models for \eqn{T} and \eqn{C}.
-  Principal component analyses are conducted before a categorization
-  (Hsu and Taylor, 2010).
-
-  When the modified IPW NRI estimator (\code{point.method = "modipw"})
-  is specified, the stratified inverse censoring probability weight is
-  used.
-  Strata are constructed based on a categorization of individual scores
-  from a working censoring time model.
-  Weights are calculated by the standard Kaplan-Meier estimator
-  separately for each stratum.
-  Note that weights are not the inverse of predicted censoring time from
-  a working model.
-  Fitted result of the \code{coxph} or \code{survreg} for \eqn{C},
-  covariates of a working Cox model for \eqn{C}, and scores derived from
-  other regression models for \eqn{C} can be specified for a
-  stratification.
-  When covariates of a working model for \eqn{C} are specified to
-  \code{zc.C}, a Cox model is fitted inside this function.
-  When one dimensional scores (numeric vector) are specified to
-  \code{zc.C}, just a categorization is conducted to create strata.
-
   Interval estimation is based on the percentile bootstrap method.
 }
 \value{
@@ -218,52 +161,6 @@ nricens(time = NULL, event = NULL, mdl.std = NULL, mdl.new = NULL,
     case, and control subjects, respectively.
     These items are provided only when the risk category based NRI is
     specified and \code{msg = TRUE}.
-  }
-  \item{strt.all, strt.up, strt.down}{
-    Vectors of strata numbers for each subject to estimate survival
-    functions by the weighted Kaplan-Meier method.
-    These items are presented only when the modified KM based NRI
-    estimator is applied.
-    \code{strt.all} shows a strata number to estimate a marginal
-    survival function,
-    \code{strt.up} shows a strata number to estimate a survival function
-    for \code{UP}, and
-    \code{strt.down} shows a strata number to estimate a survival
-    function for \code{DOWN}.
-  }
-  \item{mdl.T.all, mdl.C.all, mdl.T.up, mdl.C.up, mdl.T.down, mdl.C.down}{
-    Fitted results of the working Cox models for \eqn{T} and \eqn{C}.
-    These items are presented only when the modified KM based NRI
-    estimator is applied.
-    \code{mdl.*.all} is fitted results of the Cox model by subjects who do
-    not belong to both \code{UP} and \code{DOWN},
-    \code{mdl.*.up} is fitted results of the Cox model by subjects who
-    belong to \code{UP}, and
-    \code{mdl.*.down} is fitted results of the Cox model by subjects who
-    belong to \code{DOWN}.
-  }
-  \item{pca.all, pca.up, pca.down}{
-    Results of the principal component analyses by \code{prcomp}
-    using scores from working Cox models for \eqn{T} and \eqn{C}.
-    These items are presented only when the modified KM based NRI
-    estimator is applied.
-    \code{pca.all} is a result of \code{prcomp} by subjects who do not
-    belong to both \code{UP} and \code{DOWN},
-    \code{pca.up} is a result of \code{prcomp} by subjects who belong to
-    \code{UP}, and
-    \code{pca.down} is result of \code{prcomp} by subjects who belong to
-    \code{DOWN}.
-  }
-  \item{mdl.C}{
-    Fitted result of a working Cox model for \eqn{C} with predictors
-    specified to \code{zc.C}.
-    This item is presented only when the modified IPW NRI estimator is
-    applied.
-  }
-  \item{strt}{
-    Vector of strata number for each subject.
-    This item is presented only when the modified IPW NRI estimator is
-    applied.
   }
   \item{bootstrapsample}{
     Results of each bootstrap sample.
@@ -326,21 +223,4 @@ nricens(mdl.std = mstd, mdl.new = mnew, t0 = 2000, updown = 'diff',
 ## Calculation of risk difference NRI by the IPW estimator
 nricens(mdl.std = mstd, mdl.new = mnew, t0 = 2000, updown = 'diff',
         cut = 0.05, point.method = 'ipw', niter = 0)
-
-## Calculation of risk difference NRI by the modified KM estimator
-nricens(mdl.std = mstd, mdl.new = mnew, t0 = 2000, updown = 'diff',
-        cut = 0.05, point.method = 'modkm', zc.T = z.new, zc.C = z.new,
-        m = 20, niter = 0)
-
-## Calculation of risk difference NRI by the modified IPW estimator
-nricens(mdl.std = mstd, mdl.new = mnew, t0 = 2000, updown = 'diff',
-        cut = 0.05, point.method = 'modipw', zc.C = z.new,
-        m = 100, niter = 0)
-
-## Calculation of risk difference NRI by the modified IPW estimator
-## censoring time model is used for constructing strata
-mdl.C = coxph(Surv(time, event==0) ~ ., data.frame(time, event, z.new))
-nricens(mdl.std = mstd, mdl.new = mnew, t0 = 2000, updown = 'diff',
-        cut = 0.05, point.method = 'modipw', mdl.C = mdl.C,
-        m = 100, niter = 0)
 }

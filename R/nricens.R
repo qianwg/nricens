@@ -1,7 +1,6 @@
 nricens <-
 function (time=NULL, event=NULL, mdl.std=NULL, mdl.new=NULL, z.std=NULL, z.new=NULL, p.std=NULL, p.new=NULL,
-  t0=NULL, updown='category', cut=NULL, point.method='km', zc.T=NULL, zc.C=NULL, mdl.C=NULL, m=100, pca2nd=1,
-  niter=1000, alpha=0.05, msg=TRUE) {
+  t0=NULL, updown='category', cut=NULL, point.method='km', niter=1000, alpha=0.05, msg=TRUE) {
 
   ##
   ## type of calculation
@@ -67,68 +66,13 @@ function (time=NULL, event=NULL, mdl.std=NULL, mdl.new=NULL, z.std=NULL, z.new=N
   ## point estimation
   est = rep(NA, 7)
   ci  = rep(NA, 14)
-  if (point.method=='ipw' || point.method=='modipw') {
+  if (point.method=='ipw') {
+    message("\nNRI estimation by IPW estimator:")
+    est = nricens.ipw.main(time, event, upp, dwn, t0)
 
-    if (point.method=='modipw' && is.null(mdl.C) && is.null(zc.C)) {
-      message("\nNRI estimation by modified IPW estimator:")
-      message("  neither model nor predictor for censoring time is specified. standard IPW estimator is used.")
-      strt = rep(1, length(time))
-
-    } else if (point.method=='modipw') {
-      message("\nNRI estimation by modified IPW estimator:")
-      if (any(class(mdl.C) == 'coxph') || any(class(mdl.C) == 'survreg')) {
-        message("  strata are based on score from the model of 'mdl.C'.")
-        strt = strata.1dim(mdl.C$linear.predictor, m)
-
-      } else if (!is.null(zc.C) && class(zc.C)=='numeric') {
-        message("  strata are based on a variable 'zc.C'.")
-        strt = strata.1dim(zc.C, m)
-
-      } else if (!is.null(zc.C)) {
-        mdl.C = try( {coxph(Surv(time, event==0) ~ ., as.data.frame(zc.C))}, silent=TRUE)
-        if (class(mdl.C) == 'try-error')
-          message("  fail to obtain Cox model for C. standard IPW estimator is used.")
-        if (all(predict(mdl.C) == 0))
-          message("  fail to obtain Cox model for C. standard IPW estimator is used.")
-
-        message("  strata are based on score from Cox model by 'zc.C'.")
-        strt = strata.1dim(mdl.C$linear.predictor, m)
-        ret = c(ret, list(mdl.C=mdl.C))
-
-      } else {
-        stop("\n\nnow coxph and survreg object are accepted for censoring time model 'mdl.C'. for other objects, score vecotr for each subject 'zc.C' is to be specified.\n\n")
-      }
-    } else if (point.method=='ipw') {
-      message("\nNRI estimation by standard IPW estimator:")
-      strt = rep(1, length(time))
-    }
-    ret = c(ret, list(strt=strt))
-    est = nricens.ipw.main(time, event, upp, dwn, t0, strt)
-
-  } else if (point.method=='km' || point.method=='modkm') {
-
-    if (point.method=='modkm') {
-      message("\nNRI estimation by modified KM estimator:")
-      message("  strata for all subjects:")
-      wk.all = strata.cox.2dim(time, event, zc.T, zc.C, m, pca2nd, !upp & !dwn)
-      message("  strata for up subjects:")
-      wk.upp = strata.cox.2dim(time, event, zc.T, zc.C, m, pca2nd, upp)
-      message("  strata for down subjects:")
-      wk.dwn = strata.cox.2dim(time, event, zc.T, zc.C, m, pca2nd, dwn)
-      strt     = wk.all$strt
-      strt.upp = wk.upp$strt
-      strt.dwn = wk.dwn$strt
-
-      ret = c(ret, list(strt.all=strt, strt.up=strt.upp, strt.down=strt.dwn,
-        mdl.T.all=wk.all$mdl.T,  mdl.C.all=wk.all$mdl.C,
-        mdl.T.up=wk.upp$mdl.T,   mdl.C.up=wk.upp$mdl.C,
-        mdl.T.down=wk.dwn$mdl.T, mdl.C.down=wk.dwn$mdl.C,
-        pca.all=wk.all$pca, pca.up=wk.upp$pca, pca.down=wk.dwn$pca))
-    } else {
-      message("\nNRI estimation by standard KM estimator:")
-      strt.upp = strt.dwn = strt = rep(1, length(time))
-    }
-    est = nricens.km.main(time, event, upp, dwn, t0, strt, strt.upp, strt.dwn)
+  } else if (point.method=='km') {
+    message("\nNRI estimation by KM estimator:")
+    est = nricens.km.main(time, event, upp, dwn, t0)
   }
   message("\nPoint estimates:")
   result = data.frame(est)
@@ -144,23 +88,23 @@ function (time=NULL, event=NULL, mdl.std=NULL, mdl.new=NULL, z.std=NULL, z.new=N
     samp = matrix(NA, niter, 7)
     colnames(samp) = c('NRI','NRI+','NRI-','Pr(Up|Case)','Pr(Down|Case)','Pr(Down|Ctrl)','Pr(Up|Ctrl)')
 
-    if (point.method == 'ipw' || point.method=='modipw') {
+    if (point.method == 'ipw') {
       for (b in 1:niter) {
         f    = as.integer(runif(N, 0, N)) + 1
         objs = list(mdl.std, mdl.new, z.std[f,], z.new[f,], p.std[f], p.new[f])
         wk   = get.uppdwn(time[f], event[f], objs, flag.mdl, flag.prd, flag.rsk, t0, updown, cut, get.risk, msg=FALSE)
         upp  = wk[[1]]
         dwn  = wk[[2]]
-        samp[b,] = nricens.ipw.main(time[f], event[f], upp, dwn, t0, strt[f])
+        samp[b,] = nricens.ipw.main(time[f], event[f], upp, dwn, t0)
       }
-    } else if (point.method=='km' || point.method=='modkm') {
+    } else if (point.method=='km') {
       for (b in 1:niter) {
         f    = as.integer(runif(N, 0, N)) + 1
         objs = list(mdl.std, mdl.new, z.std[f,], z.new[f,], p.std[f], p.new[f])
         wk   = get.uppdwn(time[f], event[f], objs, flag.mdl, flag.prd, flag.rsk, t0, updown, cut, get.risk, msg=FALSE)
         upp  = wk[[1]]
         dwn  = wk[[2]]
-        samp[b,] = nricens.km.main(time[f], event[f], upp, dwn, t0, strt[f], strt.upp[f], strt.dwn[f])
+        samp[b,] = nricens.km.main(time[f], event[f], upp, dwn, t0)
       }
     }
     ret = c(ret, list(bootstrapsample=samp))

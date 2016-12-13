@@ -1,3 +1,11 @@
+import(survival)
+
+importFrom("graphics", "abline", "legend", "par", "plot")
+importFrom("stats", "approx", "binomial", "glm", "quantile", "runif",
+             "sd", "stepfun", "update")
+
+
+
 exportPattern("^[[:alpha:]]+")
 
-export(nricens, get.uppdwn, strata.1dim, strata.cox.2dim, nricens.ipw.main, nricens.km.main, get.surv.km, get.surv.wkm, get.risk.coxph, get.risk.survreg, nribin, get.uppdwn.bin, nribin.count.main, categorize)
+export(nricens, get.uppdwn, nricens.ipw.main, nricens.km.main, get.surv.km, get.risk.coxph, get.risk.survreg, nribin, get.uppdwn.bin, nribin.count.main, categorize)
