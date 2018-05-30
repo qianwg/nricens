@@ -1,4 +1,4 @@
-298dd0b1801bb60c394dcd1d2cd99a83 *DESCRIPTION
+d3dbbab4d6162b2011c9f9de751bc848 *DESCRIPTION
 56dbf4ef5b61455497b19219a055aeb0 *NAMESPACE
 96dfc4b0c99fc792ccbabe1f4927bf40 *R/categorize.R
 3d91a82a46b32861ff10a6a753623070 *R/get.risk.coxph.R
@@ -19,7 +19,7 @@ c3036f0c2923e5cf78ea5930ab9378e4 *man/get.uppdwn.Rd
 c9a332fc00d0016917339800cf46d5d0 *man/get.uppdwn.bin.Rd
 c8eb4e3905c74c46af45289740128bc3 *man/nribin.Rd
 5ac4b42cf55dea19a2a55620ec5586f6 *man/nribin.count.main.Rd
-3fd3cc9fea13eee44100557ace09d225 *man/nricens-package.Rd
+61a8f0d42fcc82757a572adb5922d7d9 *man/nricens-package.Rd
 97f8b500a7c5ab1557b08db8bd63f923 *man/nricens.Rd
 99e21ff26efacaf41c1f1b92cc648562 *man/nricens.ipw.main.Rd
 a3ee997888a709525ed277bbebd78668 *man/nricens.km.main.Rd
