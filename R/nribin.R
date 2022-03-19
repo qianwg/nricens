@@ -76,9 +76,10 @@ function (event=NULL, mdl.std=NULL, mdl.new=NULL, z.std=NULL, z.new=NULL, p.std=
 
     ci = as.numeric(apply(samp, 2, quantile, c(alpha/2, 1-alpha/2), na.rm=TRUE, type=2))
     se = as.numeric(apply(samp, 2, sd))
+    pvalue = (1-pnorm(abs(est/se))) *2
     message("\nPoint & Interval estimates:")
-    result = as.data.frame(cbind(est, se, matrix(ci, ncol=2, byrow=TRUE)))
-    names(result) = c('Estimate', 'Std.Error', 'Lower', 'Upper')
+    result = as.data.frame(cbind(est, se, matrix(ci, ncol=2, byrow=TRUE), pvalue))
+    names(result) = c('Estimate', 'Std.Error', 'Lower', 'Upper', 'Pvalue')
     row.names(result) = c('NRI','NRI+','NRI-','Pr(Up|Case)','Pr(Down|Case)','Pr(Down|Ctrl)','Pr(Up|Ctrl)')
     print(result)
   }
